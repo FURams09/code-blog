@@ -16,9 +16,12 @@ class IndexPage extends Component {
     }
   }
   loginSuccess(e) {
-    console.log(e);
-    axios.post('http://localhost:3030/auth', {
-      e
+    const authToken = e.tokenObj;
+    console.log(authToken);
+    axios.post('http://localhost:3030/auth',{}, {
+      headers: {
+        "Authorization": authToken.id_token
+      }
     }).then(
       this.setState({
         loggedIn: true
