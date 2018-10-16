@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "Name": "Greg",
+      "Email": "padin.greg@gmail.com",
+      "UserType": "Admin",
+      "id": 1,
+      "Token": "DASFJDOsiajfiowenfoiwenqpfewinq9pf832hj98fh239fndwfsad"
+    }
+  ]
+}

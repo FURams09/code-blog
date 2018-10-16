@@ -1,0 +1,41 @@
+{
+  "name": "gregs-coding-blog",
+  "description": "Portfolio to practice project management, learn Gatsby and hopefully get a job",
+  "version": "1.0.0",
+  "author": "Greg Padin <padin.greg@gmail.com>",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "gatsby": "^2.0.19",
+    "gatsby-plugin-manifest": "^2.0.5",
+    "gatsby-plugin-offline": "^2.0.5",
+    "gatsby-plugin-react-helmet": "^3.0.0",
+    "json-server": "^0.14.0",
+    "mongodb": "^3.1.8",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "react-google-login": "^3.2.1",
+    "react-helmet": "^5.2.0"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write '**/*.js'",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-serve": "json-server --watch dev_server/db.json",
+    "auth-serve": "nodemon server/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4",
+    "prettier": "^1.14.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  }
+}
