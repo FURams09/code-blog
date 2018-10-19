@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Link,  } from 'gatsby';
+import { Link } from 'gatsby';
 import axios from 'axios';
 
-import {Redirect} from '@reach/router';
+import { Redirect } from '@reach/router';
 
 import { GoogleLogin } from 'react-google-login';
 import GoogleCredentials from '../../credentials.json';
@@ -12,24 +12,23 @@ class IndexPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false
-    }
+      loggedIn: false,
+    };
   }
   loginSuccess(e) {
-    const authToken = e.tokenObj;
-    console.log(authToken);
-    axios.post('http://localhost:3030/auth',{}, {
-      headers: {
-        "Authorization": authToken.id_token
-      }
-    }).then(
-      this.setState({
-        loggedIn: true
+    const authorizationTicket = e.tokenObj;
+    console.log(e);
+    axios
+      .post('http://localhost:3030/auth', { authorizationTicket })
+      .then(() => {
+        localStorage.setItem('Authorization', authorizationTicket.access_token);
+        this.setState({
+          loggedIn: true,
+        });
       })
-    ).catch((ex) => {
-      console.log(ex);
-    })
-    
+      .catch((ex) => {
+        console.log(ex);
+      });
   }
   loginError(e) {
     console.log(e);
@@ -37,7 +36,7 @@ class IndexPage extends Component {
 
   render() {
     if (this.state.loggedIn) {
-      return <Redirect to="/page-2/" noThrow/>
+      return <Redirect to="/page-2/" noThrow />;
     }
     return (
       <Layout>
@@ -45,16 +44,16 @@ class IndexPage extends Component {
         <p>Welcome to your new Gatsby site.</p>
         <p>Now go build something great.</p>
         <Link to="/page-2/">Go to page 2</Link>
-        <GoogleLogin 
-          style={{padding:"10px 20px", display: "block"}}
+        <GoogleLogin
+          style={{ padding: '10px 20px', display: 'block' }}
           clientId={GoogleCredentials.web.client_id}
           buttonText="Open with Google"
           onSuccess={this.loginSuccess.bind(this)}
           onFailure={this.loginError.bind(this)}
         />
       </Layout>
-    )
+    );
   }
 }
 
-export default IndexPage
+export default IndexPage;
