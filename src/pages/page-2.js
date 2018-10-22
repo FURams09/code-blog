@@ -15,23 +15,23 @@ class SecondPage extends Component {
   }
 
   logout() {
+    localStorage.removeItem('Authorization');
     this.setState({
       loggedIn: false,
     });
   }
 
   fakeRequest() {
+    let headers = {};
+    if (localStorage.getItem('Authorization'))
+      headers = {
+        Authorization: `Bearer ${localStorage.getItem('Authorization')}`,
+      };
     axios
-      .get(
-        'http://localhost:3030',
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('Authorization')}`,
-          },
-          withCredentials: true,
-        },
-        {}
-      )
+      .get('http://localhost:3030', {
+        headers,
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res);
       })

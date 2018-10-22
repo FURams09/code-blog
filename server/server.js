@@ -28,12 +28,18 @@ app.use(express.json({ type: 'application/json' }));
 const authenticate = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
   let result;
-  if (authorizationHeader) {
-    const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
-    console.log(token);
-    next();
-  } else {
-    res.send(401, 'Authorization Header Not Provided');
+  try {
+    if (authorizationHeader) {
+      const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
+      req.token = token;
+      next();
+    } else {
+      throw new Exception(
+        'Authentication Header Missing from Restricted Route'
+      );
+    }
+  } catch (ex) {
+    res.status(401).send(ex);
   }
 };
 /**
