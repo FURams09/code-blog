@@ -15,6 +15,7 @@ class SecondPage extends Component {
   }
 
   logout() {
+    console.log(localStorage.getItem('Authorization'));
     localStorage.removeItem('Authorization');
     this.setState({
       loggedIn: false,
@@ -47,13 +48,17 @@ class SecondPage extends Component {
       <Layout>
         <h1>Hi from the second page</h1>
         <p>Welcome to page 2</p>
-        <Link to="/">Go back to the homepage</Link>
         <GoogleLogout
-          style={{ padding: '10px 20px' }}
+          style={{ padding: '10px 20px', margin: '10px' }}
           buttonText="Logout"
           onLogoutSuccess={this.logout.bind(this)}
         />
-        <button onClick={this.fakeRequest.bind(this)}>Get</button>
+        <button
+          onClick={this.fakeRequest.bind(this)}
+          style={{ padding: '10px 20px' }}
+        >
+          Get
+        </button>
       </Layout>
     );
   }

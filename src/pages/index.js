@@ -6,7 +6,7 @@ import { Redirect } from '@reach/router';
 
 import { GoogleLogin } from 'react-google-login';
 import GoogleCredentials from '../../credentials.json';
-import Layout from '../components/layout';
+import LandingPage from '../components/landingPage';
 const STATUSES = {
   loading: 'loading',
   validating: 'validating',
@@ -56,10 +56,10 @@ class IndexPage extends Component {
       this.state.status === STATUSES.validating ||
       this.state.status === STATUSES.loading
     ) {
-      return <Layout>Validating Login Status</Layout>;
+      return <LandingPage>Validating Login Status</LandingPage>;
     } else {
       return (
-        <Layout>
+        <LandingPage>
           <h1>Hi people</h1>
           <p>Welcome to your new Gatsby site.</p>
           <p>Now go build something great.</p>
@@ -71,7 +71,7 @@ class IndexPage extends Component {
             style={{ padding: '10px 20px', display: 'block' }}
             clientId={GoogleCredentials.web.client_id}
           />
-        </Layout>
+        </LandingPage>
       );
     }
   }
