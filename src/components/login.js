@@ -3,15 +3,22 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import GoogleLogin from './google-login';
-import styles from '../styles/styles';
+import FormInputGroup from './form-input-group';
+import styles from '../styles';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faUser } from '@fortawesome/free-solid-svg-icons';
 
 class LoginForm extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      name: '',
+      email: '',
+    };
   }
   loginSuccess(e) {
     const authorizationTicket = e.tokenObj;
-    console.log(e);
     axios
       .post('http://localhost:3030/auth', { authorizationTicket })
       .then(() => {
@@ -25,23 +32,32 @@ class LoginForm extends Component {
   loginError(ex) {
     this.props.onLoginFail(ex);
   }
+
+  inputChange(label, value) {
+    this.setState({
+      [label]: value,
+    });
+  }
   render() {
+    const emailIcon = <FontAwesomeIcon icon={faEnvelope} />;
+    const personIcon = <FontAwesomeIcon icon={faUser} />;
     return (
       <form style={{ border: `1px dashed green`, textAlign: `left` }}>
+        <FormInputGroup
+          label="Name"
+          id="name"
+          icon={personIcon}
+          updateInput={this.inputChange.bind(this, 'name')}
+        />
+        <FormInputGroup
+          label="Email"
+          id="email"
+          icon={emailIcon}
+          updateInput={this.inputChange.bind(this, 'email')}
+        />
+
         <div style={styles.Form.formGroup}>
-          <label htmlFor="name" style={styles.Form.label}>
-            Name:
-          </label>
-          <input type="input" id="name" placeholder="name" />
-        </div>
-        <div style={styles.Form.formGroup}>
-          <label htmlFor="name" style={styles.Form.label}>
-            Email:
-          </label>
-          <input type="input" id="email" placeholder="email" />
-        </div>
-        <div style={styles.Form.formGroup}>
-          <button type="button" style={{ padding: '10px 20px' }}>
+          <button type="button" style={styles.Form.button}>
             Request Access
           </button>
           <GoogleLogin

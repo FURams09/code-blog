@@ -4,7 +4,7 @@ import { Redirect } from '@reach/router';
 
 import Layout from '../components/layout.js';
 import LoginForm from '../components/login';
-import styles from '../styles/styles';
+import styles from '../styles';
 const STATUSES = {
   loading: 'loading',
   loggedIn: 'loggedIn',

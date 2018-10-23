@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { GoogleLogin } from 'react-google-login';
 import GoogleCredentials from '../../credentials.json';
-
+import styles from '../styles';
 class GoogleLoginButton extends Component {
   loginSuccess(res) {
     this.props.onSuccess(res);
@@ -17,7 +17,7 @@ class GoogleLoginButton extends Component {
         buttonText="Login With Google"
         onSuccess={this.loginSuccess.bind(this)}
         onFailure={this.loginError.bind(this)}
-        style={{ padding: '10px 20px' }}
+        style={styles.Form.button}
         clientId={GoogleCredentials.web.client_id}
       />
     );

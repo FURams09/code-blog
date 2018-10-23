@@ -47,6 +47,7 @@ export default {
   Form: {
     formGroup: {
       display: `block`,
+      margin: `10px 0px`,
     },
     label: {
       padding: `12px 12px 12px 0`,
@@ -55,6 +56,9 @@ export default {
     input: {
       padding: `12px 20px`,
       width: `75%`,
+    },
+    button: {
+      padding: '10px 20px',
     },
   },
 };

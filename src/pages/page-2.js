@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'gatsby';
 
 import { Redirect } from '@reach/router';
 import Layout from '../components/layout';
