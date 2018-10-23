@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { graphql } from 'gatsby';
+
 import { Redirect } from '@reach/router';
 
 import Layout from '../components/layout.js';
 import LoginForm from '../components/login';
 import styles from '../styles';
+import Blurb from '../components/blurb.js';
 
 const STATUSES = {
   loading: 'loading',
@@ -51,9 +52,10 @@ class IndexPage extends Component {
             </h2>
           </div>
           <div style={styles.Grid.gridContainer}>
+            <Blurb />
             <div
               style={Object.assign({}, styles.Grid.gridContentArea, {
-                gridArea: `aboutMe`,
+                gridArea: `purpose`,
               })}
             >
               <h2>About Me</h2>
@@ -78,15 +80,7 @@ class IndexPage extends Component {
                 <p>tent</p>
               </div>
             </div>
-            <div
-              style={Object.assign({}, styles.Grid.gridContentArea, {
-                gridArea: `purpose`,
-              })}
-            >
-              <h2>Where are you</h2>
-              <p>Welcome to your new Gatsby site.</p>
-              <p>Now go build something great.</p>
-            </div>
+
             <div
               style={Object.assign({}, styles.Grid.gridContentArea, {
                 gridArea: `login`,
