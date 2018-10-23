@@ -1,69 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'gatsby';
-import axios from 'axios';
 
 import { Redirect } from '@reach/router';
 
-import { GoogleLogin } from 'react-google-login';
-import GoogleCredentials from '../../credentials.json';
-
-import { StaticQuery, graphql } from 'gatsby';
-
-import headerImage from '../../public/images/landing-cover.jpg';
 import Layout from '../components/layout.js';
-
+import LoginForm from '../components/login';
+import styles from '../styles/styles';
 const STATUSES = {
   loading: 'loading',
   loggedIn: 'loggedIn',
   landingPage: 'landingPage',
-};
-
-const styles = {
-  Header: {
-    headerContainer: {
-      position: `fixed`,
-      width: `100%`,
-      height: `200px`,
-      border: `1px dashed black`,
-      backgroundColor: `green`,
-    },
-    jumbotronText: {
-      position: `absolute`,
-      top: `40%`,
-      left: `30%`,
-      color: `blue`,
-      zIndex: `1`,
-    },
-  },
-  Grid: {
-    //TODO: convert this to flexbox. More in line with what it is
-    gridContainer: {
-      display: 'grid',
-      gridTemplateAreas: `
-      ". aboutMe purpose login ."`,
-      gridTemplateColumns: `1fr minmax(200px, 400p) minmax(200px, 400p) minmax(200px, 400p) 1fr`,
-      gridTemplateRows: `minmax(300px, 600p)`,
-      textAlign: `center`,
-      paddingTop: `200px`,
-      border: `1px dashed red`,
-    },
-    gridContentArea: {
-      textAlign: `center`,
-      border: `1px dashed red`,
-    },
-  },
-  Footer: {
-    background: {
-      bottom: `0px`,
-      backgroundColor: 'black',
-      color: `grey`,
-      height: `60px`,
-      textAlign: `left`,
-      verticalAlign: `bottom`,
-      width: `100%`,
-      padding: `10px 25px`,
-    },
-  },
 };
 
 class IndexPage extends Component {
@@ -82,25 +27,15 @@ class IndexPage extends Component {
       }
     }
   }
-  loginSuccess(e) {
-    const authorizationTicket = e.tokenObj;
-    console.log(e);
-    axios
-      .post('http://localhost:3030/auth', { authorizationTicket })
-      .then(() => {
-        localStorage.setItem('Authorization', authorizationTicket.access_token);
-        this.setState({
-          status: STATUSES.loggedIn,
-        });
-      })
-      .catch((ex) => {
-        console.log(ex);
-      });
-  }
-  loginError(e) {
-    console.log(e);
-  }
 
+  loginSuccess() {
+    this.setState({
+      status: STATUSES.loggedIn,
+    });
+  }
+  loginFail(ex) {
+    console.log(ex);
+  }
   render() {
     if (this.state.status === STATUSES.loggedIn) {
       return <Redirect to="/page-2/" noThrow />;
@@ -164,12 +99,9 @@ class IndexPage extends Component {
                   justifyContent: `center`,
                 }}
               >
-                <GoogleLogin
-                  buttonText="Login With Google"
-                  onSuccess={this.loginSuccess.bind(this)}
-                  onFailure={this.loginError.bind(this)}
-                  style={{ padding: '10px 20px', display: 'block' }}
-                  clientId={GoogleCredentials.web.client_id}
+                <LoginForm
+                  onLogin={this.loginSuccess.bind(this)}
+                  onLoginFail={this.loginFail.bind(this)}
                 />
               </div>
             </div>
