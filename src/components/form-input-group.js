@@ -11,8 +11,7 @@ class FormInputGroup extends Component {
   }
 
   handleBlur(e) {
-    let { value } = e.target;
-    this.props.updateInput({ value });
+    this.props.updateInput(this.props.id, this.state.value);
   }
   render() {
     let { id, label, icon } = this.props;
