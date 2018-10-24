@@ -13,6 +13,7 @@ const app = express();
 connect();
 
 const User = require('./models/user');
+const Session = require('./models/session');
 
 // Google Authentication
 // https://developers.google.com/identity/sign-in/web/backend-auth
@@ -24,14 +25,32 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 app.use(cors({ origin: 'http://localhost:8000', credentials: true })); // Gatsby dev port
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ type: 'application/json' }));
+/*PUBLIC ROUTES */
+app.post('/register', (req, res) => {
+  const { name, email } = req;
+  if (!name || !email) {
+    res.statusCode(400);
+  }
+});
 
+/*PRIVATE ROUTES */
 const authenticate = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
-  let result;
   try {
     if (authorizationHeader) {
-      const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
-      req.token = token;
+      const sentToken = req.headers.authorization.split(' ')[1]; // Bearer <token>
+
+      Session.findOne({ token: sentToken })
+        .populate('user')
+        .then((session) => {
+          console.log(session);
+          req.session = session;
+        })
+        .catch((ex) => {
+          console.log(`Session Not Found: ${ex}`);
+          res.status(401).send(ex);
+        });
+
       next();
     } else {
       throw new Exception(
@@ -42,10 +61,11 @@ const authenticate = (req, res, next) => {
     res.status(401).send(ex);
   }
 };
+
 /**
  * send the id_token in the header.authorization
  */
-app.post('/auth', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { id_token, access_token } = req.body.authorizationTicket;
   const ticket = await client.verifyIdToken({
     idToken: req.body.authorizationTicket.id_token,
@@ -56,7 +76,7 @@ app.post('/auth', async (req, res) => {
   // Find out if user is in database
   // if user is pending, let them know
   //if user if not in db return them to their homepage
-  const googleUser = await User.find({ email: loginReq.email });
+  const googleUser = await User.findOne({ email: loginReq.email });
   if (googleUser.length === 0) {
     googleUser = new User({
       firstName: loginReq.given_name,
@@ -64,10 +84,30 @@ app.post('/auth', async (req, res) => {
       email: loginReq.email,
       role: 'PENDING',
     });
+    googleUser.save();
   }
-  googleUser.sessionToken = access_token;
-  // googleUser.save();
+  let sessionUser = {
+    email: googleUser.email,
+    role: googleUser.role,
+  };
+  let newSession = new Session({ token: access_token, user: sessionUser });
+  console.log(newSession);
+  await newSession.save();
   res.send(googleUser);
+});
+
+app.get('/logout', authenticate, async (req, res) => {
+  session = await Session.find({ token: req.session.token }).catch((ex) => {
+    res.status(500).send(`Error ending session: ${ex}`);
+  });
+
+  await Session.deleteMany(session);
+  res.send({ session: req.session.token });
+});
+
+app.get('/authenticate', authenticate, (req, res) => {
+  console.log(req.session);
+  res.send(req.token);
 });
 
 app.get('/', authenticate, (req, res) => {

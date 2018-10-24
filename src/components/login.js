@@ -20,7 +20,7 @@ class LoginForm extends Component {
   loginSuccess(e) {
     const authorizationTicket = e.tokenObj;
     axios
-      .post('http://localhost:3030/auth', { authorizationTicket })
+      .post('http://localhost:3030/login', { authorizationTicket })
       .then(() => {
         localStorage.setItem('Authorization', authorizationTicket.access_token);
         this.props.onLogin();

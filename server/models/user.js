@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
-  sessionToken: String,
   role: {
     type: String,
     required: true,
