@@ -40,7 +40,7 @@ class IndexPage extends Component {
   }
   render() {
     if (this.state.status === STATUSES.loggedIn) {
-      return <Redirect to="/page-2/" noThrow />;
+      return <Redirect to="/blog/first-blog/" noThrow />;
     } else if (this.state.status === STATUSES.loading) {
       return <Layout>Validating Login Status</Layout>;
     } else {
