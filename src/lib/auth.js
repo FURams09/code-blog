@@ -6,7 +6,7 @@ const Authenticater = {
       ...headers,
       Authorization: `Bearer ${authToken}`,
     };
-
+    console.log(url);
     let response = await axios.get(`${url}`, { headers }).catch((ex) => {
       console.log(ex);
       throw new Error(`Authentication: ${ex}`);

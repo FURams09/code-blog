@@ -3,17 +3,23 @@ import { graphql, navigate } from 'gatsby';
 
 import styles from '../styles';
 import { GoogleLogout } from 'react-google-login';
+import Auth from '../lib/auth';
 
 export default class BlogTemplate extends Component {
   constructor(props) {
     super(props);
   }
-  logout = (res) => {
-    console.log(res);
-    localStorage.removeItem('Authorization');
-    console.log('hit');
-    navigate('/');
-  };
+  logout() {
+    Auth.get('http://localhost:3030/logout')
+      .then((res) => {
+        console.log(res);
+        localStorage.removeItem('Authorization');
+        navigate('/');
+      })
+      .catch((ex) => {
+        console.log(ex);
+      });
+  }
   render() {
     const { data } = this.props;
     const { frontmatter, html } = data.markdownRemark;
@@ -30,6 +36,14 @@ export default class BlogTemplate extends Component {
           })}
         >
           <div dangerouslySetInnerHTML={{ __html: html }} />
+          <button
+            onClick={() => {
+              localStorage.removeItem('Authorization');
+              navigate('/');
+            }}
+          >
+            Kill
+          </button>
         </div>
       </div>
     );

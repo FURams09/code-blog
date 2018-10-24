@@ -34,23 +34,19 @@ app.post('/register', (req, res) => {
 });
 
 /*PRIVATE ROUTES */
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
   try {
     if (authorizationHeader) {
       const sentToken = req.headers.authorization.split(' ')[1]; // Bearer <token>
 
-      Session.findOne({ token: sentToken })
-        .populate('user')
-        .then((session) => {
-          console.log(session);
-          req.session = session;
-        })
-        .catch((ex) => {
+      const session = await Session.findOne({ token: sentToken }).catch(
+        (ex) => {
           console.log(`Session Not Found: ${ex}`);
           res.status(401).send(ex);
-        });
-
+        }
+      );
+      req.session = session;
       next();
     } else {
       throw new Exception(
@@ -91,22 +87,21 @@ app.post('/login', async (req, res) => {
     role: googleUser.role,
   };
   let newSession = new Session({ token: access_token, user: sessionUser });
-  console.log(newSession);
   await newSession.save();
   res.send(googleUser);
 });
 
 app.get('/logout', authenticate, async (req, res) => {
-  session = await Session.find({ token: req.session.token }).catch((ex) => {
-    res.status(500).send(`Error ending session: ${ex}`);
-  });
+  try {
+    await Session.deleteMany({ token: req.session.token });
 
-  await Session.deleteMany(session);
-  res.send({ session: req.session.token });
+    res.send({ session: req.session.token });
+  } catch (ex) {
+    res.status(500).send(`Error ending session: ${ex}`);
+  }
 });
 
 app.get('/authenticate', authenticate, (req, res) => {
-  console.log(req.session);
   res.send(req.token);
 });
 
