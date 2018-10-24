@@ -26,11 +26,23 @@ app.use(cors({ origin: 'http://localhost:8000', credentials: true })); // Gatsby
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ type: 'application/json' }));
 /*PUBLIC ROUTES */
-app.post('/register', (req, res) => {
-  const { name, email } = req;
-  if (!name || !email) {
-    res.statusCode(400);
+app.post('/register', async (req, res) => {
+  console.log(req.body);
+  const { firstName, lastName, email } = req.body;
+  if (!firstName || !lastName || !email) {
+    res.status(400).send(`invalid request ${req}`);
   }
+  googleUser = new User({
+    firstName,
+    lastName,
+    email,
+    role: 'PENDING',
+  });
+  googleUser.save().catch((ex) => {
+    //console.log(ex);
+    res.send(ex);
+  });
+  res.send(googleUser);
 });
 
 /*PRIVATE ROUTES */
@@ -74,13 +86,7 @@ app.post('/login', async (req, res) => {
   //if user if not in db return them to their homepage
   const googleUser = await User.findOne({ email: loginReq.email });
   if (googleUser.length === 0) {
-    googleUser = new User({
-      firstName: loginReq.given_name,
-      lastName: loginReq.family_name,
-      email: loginReq.email,
-      role: 'PENDING',
-    });
-    googleUser.save();
+    res.status(400).send(`User Not Found`);
   }
   let sessionUser = {
     email: googleUser.email,

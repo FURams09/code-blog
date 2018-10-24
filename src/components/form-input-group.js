@@ -9,7 +9,9 @@ class FormInputGroup extends Component {
       value: '',
     };
   }
-
+  handleChange(e) {
+    this.setState({ value: e.target.value });
+  }
   handleBlur(e) {
     this.props.updateInput(this.props.id, this.state.value);
   }
@@ -24,9 +26,7 @@ class FormInputGroup extends Component {
           id={id}
           placeholder={label}
           onBlur={this.handleBlur.bind(this)}
-          onChange={(e) => {
-            this.setState({ value: e.target.value });
-          }}
+          onChange={this.handleChange.bind(this)}
         />
       </div>
     );

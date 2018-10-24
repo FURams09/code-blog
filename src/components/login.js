@@ -12,10 +12,14 @@ import { faEnvelope, faUser } from '@fortawesome/free-solid-svg-icons';
 class LoginForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: '',
-      email: '',
-    };
+    this.state = { firstName: '', lastName: '', email: '' };
+  }
+  requestLogin() {
+    axios.post('http://localhost:3030/register', {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+    });
   }
   loginSuccess(e) {
     const authorizationTicket = e.tokenObj;
@@ -44,20 +48,30 @@ class LoginForm extends Component {
     return (
       <form style={{ border: `1px dashed green`, textAlign: `left` }}>
         <FormInputGroup
-          label="Name"
-          id="name"
+          label="Firt Name"
+          id="firstName"
           icon={personIcon}
-          updateInput={this.inputChange.bind(this, 'name')}
+          updateInput={this.inputChange.bind(this)}
+        />
+        <FormInputGroup
+          label="Last Name"
+          id="lastName"
+          icon={personIcon}
+          updateInput={this.inputChange.bind(this)}
         />
         <FormInputGroup
           label="Email"
           id="email"
           icon={emailIcon}
-          updateInput={this.inputChange.bind(this, 'email')}
+          updateInput={this.inputChange.bind(this)}
         />
 
         <div style={styles.Form.formGroup}>
-          <button type="button" style={styles.Form.button}>
+          <button
+            type="button"
+            style={styles.Form.button}
+            onClick={this.requestLogin.bind(this)}
+          >
             Request Access
           </button>
           <GoogleLogin
