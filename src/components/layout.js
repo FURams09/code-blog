@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
 
 import './layout.css';
+import Header from './header';
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -27,7 +28,7 @@ const Layout = ({ children }) => (
         >
           <html lang="en" />
         </Helmet>
-
+        <Header title="Greg's Code Blog" />
         {children}
       </>
     )}

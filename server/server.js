@@ -108,8 +108,14 @@ app.get('/logout', authenticate, async (req, res) => {
 });
 
 app.get('/authenticate', authenticate, (req, res) => {
-  console.log(req.session.user);
   res.send(req.session.user);
+});
+
+app.get('/users', authenticate, async (req, res) => {
+  let users = await User.find({}).catch((ex) => {
+    res.status(500).send(ex);
+  });
+  res.send(users);
 });
 
 app.get('/', authenticate, (req, res) => {
