@@ -53,6 +53,9 @@ app.post('/register', async (req, res) => {
 });
 
 /*PRIVATE ROUTES */
+/**
+ * Ensures that any request to a restricted route has a Bearer token with the session ID
+ */
 const authenticate = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
 
@@ -69,20 +72,21 @@ const authenticate = async (req, res, next) => {
       req.session = session;
       next();
     } else {
-      throw new Exception(
-        'Authentication Header Missing from Restricted Route'
-      );
+      logger.warn(`Unauthorized Request`);
+      res.status(401).send([]);
     }
   } catch (ex) {
     logger.error(ex);
-    res.status(401).send(ex);
+    res.status(500).send(ex);
   }
 };
 
 /**
- * send the id_token in the header.authorization
+ * validates the id_token with Google, then creates a session for the provided access_token.
+ * The access_token is then used as the bearer token for future requests.
  */
 app.post('/login', async (req, res) => {
+  logger.trace(JSON.stringify(req.body.authorizationTicket));
   const { id_token, access_token } = req.body.authorizationTicket;
   const ticket = await client.verifyIdToken({
     idToken: req.body.authorizationTicket.id_token,
@@ -106,10 +110,14 @@ app.post('/login', async (req, res) => {
   res.send(googleUser);
 });
 
+// TODO: Should replace this with cookies once https is set up.
 app.get('/authenticate', authenticate, (req, res) => {
   res.send(req.session.user);
 });
 
+/**
+ * remove a session from the database and return the session ended to confirm with the sender
+ */
 app.get('/logout', authenticate, async (req, res) => {
   try {
     await Session.deleteMany({ token: req.session.token });
@@ -121,6 +129,9 @@ app.get('/logout', authenticate, async (req, res) => {
   }
 });
 
+/**
+ * lists all people with access to the blog
+ */
 app.get('/users', authenticate, async (req, res) => {
   let users = await User.find({}).catch((ex) => {
     res.status(500).send(ex);
@@ -128,15 +139,28 @@ app.get('/users', authenticate, async (req, res) => {
   res.send(users);
 });
 
-app.put('/user/', async (req, res) => {
+/**
+ * Right now this just changes a pending request to Viewer
+ */
+app.put('/user/', authenticate, async (req, res) => {
+  // TODO: handle bad Ids
   let user = await User.findById(req.body._id).catch((ex) => {
     res.status(500).send(ex);
   });
-  if (user.role === 'Admin') {
-    res.send(`Cannot downgrade Admin to Viewer.`);
+  if (user.role !== 'Pending') {
+    logger.info(
+      `Non-Pending user whitelist attempt with ID ${req.body._id}. \nUser: ${
+        user.firstName
+      } ${user.lastName}\nRole: ${user.role}\nSender: ${req.session.email}`
+    );
+  } else {
+    user.role = req.body.role;
+    user.save().catch((ex) => res.status(500).send(ex));
+    logger.info(
+      `User ${user.firstName} ${user.lastName} granted viewer permissions`
+    );
   }
-  user.role = req.body.role;
-  user.save().catch((ex) => res.status(500).send(ex));
+
   res.send(user);
 });
 
