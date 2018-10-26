@@ -106,6 +106,10 @@ app.post('/login', async (req, res) => {
   res.send(googleUser);
 });
 
+app.get('/authenticate', authenticate, (req, res) => {
+  res.send(req.session.user);
+});
+
 app.get('/logout', authenticate, async (req, res) => {
   try {
     await Session.deleteMany({ token: req.session.token });

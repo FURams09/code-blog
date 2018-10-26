@@ -7,15 +7,19 @@ import './layout.css';
 import Header from './header';
 
 const Layout = ({ children, showHeader }) => {
-  let body = children;
-  if (showHeader) {
-    body = (
-      <>
-        <Header title="Greg's Code Blog" />
-        {children}
-      </>
-    );
-  }
+  let body = (title) => {
+    if (showHeader) {
+      return (
+        <>
+          <Header siteTitle={title} />
+          {children}
+        </>
+      );
+    } else {
+      return children;
+    }
+  };
+
   return (
     <StaticQuery
       query={graphql`
@@ -38,7 +42,7 @@ const Layout = ({ children, showHeader }) => {
           >
             <html lang="en" />
           </Helmet>
-          {body}
+          {body(data.site.siteMetadata.title)}
         </>
       )}
     />
@@ -47,7 +51,7 @@ const Layout = ({ children, showHeader }) => {
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-  showHeader: PropTypes.bool.isRequired,
+  showHeader: PropTypes.bool,
 };
 
 export default Layout;
