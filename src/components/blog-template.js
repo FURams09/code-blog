@@ -4,7 +4,7 @@ import { graphql, navigate } from 'gatsby';
 import styles from '../styles';
 import { GoogleLogout } from 'react-google-login';
 import Auth from '../lib/auth';
-
+import Layout from './layout';
 export default class BlogTemplate extends Component {
   constructor(props) {
     super(props);
@@ -24,28 +24,30 @@ export default class BlogTemplate extends Component {
     const { data } = this.props;
     const { frontmatter, html } = data.markdownRemark;
     return (
-      <div style={styles.Grid.gridContainer}>
-        <GoogleLogout
-          style={{ padding: '10px 20px', margin: '10px' }}
-          buttonText="Logout"
-          onLogoutSuccess={this.logout.bind(this)}
-        />
-        <div
-          style={Object.assign({}, styles.Grid.gridContentArea, {
-            gridArea: `aboutMe`,
-          })}
-        >
-          <div dangerouslySetInnerHTML={{ __html: html }} />
-          <button
-            onClick={() => {
-              localStorage.removeItem('Authorization');
-              navigate('/');
-            }}
+      <Layout showHeader>
+        <div style={styles.Grid.gridContainer}>
+          <GoogleLogout
+            style={{ padding: '10px 20px', margin: '10px' }}
+            buttonText="Logout"
+            onLogoutSuccess={this.logout.bind(this)}
+          />
+          <div
+            style={Object.assign({}, styles.Grid.gridContentArea, {
+              gridArea: `aboutMe`,
+            })}
           >
-            Kill
-          </button>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
+            <button
+              onClick={() => {
+                localStorage.removeItem('Authorization');
+                navigate('/');
+              }}
+            >
+              Kill
+            </button>
+          </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 }

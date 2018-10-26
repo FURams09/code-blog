@@ -45,7 +45,7 @@ class IndexPage extends Component {
       return <Layout>Validating Login Status</Layout>;
     } else {
       return (
-        <Layout>
+        <Layout showHeader={false}>
           <div style={styles.Header.headerContainer}>
             <h2 style={styles.Header.jumbotronText}>
               Gregory Padin's Coding and Interviewing Blog

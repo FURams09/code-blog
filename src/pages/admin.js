@@ -54,7 +54,7 @@ export default class Admin extends Component {
           return <li>{`${user.firstName} ${user.lastName}: ${user.role}`}</li>;
         });
         return (
-          <Layout>
+          <Layout showHeader>
             <div>Welcome Greg</div>
             <ul>{userDisplay}</ul>
           </Layout>
