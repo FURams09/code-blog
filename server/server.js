@@ -108,7 +108,8 @@ app.get('/logout', authenticate, async (req, res) => {
 });
 
 app.get('/authenticate', authenticate, (req, res) => {
-  res.send(req.token);
+  console.log(req.session.user);
+  res.send(req.session.user);
 });
 
 app.get('/', authenticate, (req, res) => {
