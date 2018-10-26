@@ -48,6 +48,7 @@ app.post('/register', async (req, res) => {
 /*PRIVATE ROUTES */
 const authenticate = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
+  console.log(req.headers);
   try {
     if (authorizationHeader) {
       const sentToken = req.headers.authorization.split(' ')[1]; // Bearer <token>
@@ -113,6 +114,26 @@ app.get('/authenticate', authenticate, (req, res) => {
 
 app.get('/users', authenticate, async (req, res) => {
   let users = await User.find({}).catch((ex) => {
+    res.status(500).send(ex);
+  });
+  res.send(users);
+});
+
+app.put('/user/', async (req, res) => {
+  let user = await User.findById(req.body._id).catch((ex) => {
+    res.status(500).send(ex);
+  });
+  if (user.role === 'Admin') {
+    res.send(`Cannot downgrade Admin to Viewer.`);
+  }
+  user.role = req.body.role;
+  user.save().catch((ex) => res.status(500).send(ex));
+  res.send(user);
+});
+
+app.delete('/user/:_id', authenticate, async (req, res) => {
+  const userId = req.params._id;
+  let users = await User.findByIdAndRemove(userId).catch((ex) => {
     res.status(500).send(ex);
   });
   res.send(users);

@@ -47,7 +47,7 @@ const Layout = ({ children, showHeader }) => {
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-  showHeader: PropTypes.string.isRequired,
+  showHeader: PropTypes.bool.isRequired,
 };
 
 export default Layout;

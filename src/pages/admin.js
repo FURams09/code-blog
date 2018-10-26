@@ -5,7 +5,6 @@ import Auth from '../lib/auth';
 
 // components
 import Layout from '../components/layout';
-import Axios from 'axios';
 
 const validationState = {
   validating: 'validating',
@@ -17,14 +16,15 @@ export default class Admin extends Component {
     super(props);
     this.state = {
       status: validationState.validating,
-      getUsers: false,
+      loading: false,
       users: [],
+      awaitingUpdate: false,
     };
   }
-  isAdmin() {
+  componentDidMount() {
     Auth.get('http://localhost:3030/authenticate').then((user) => {
       if (user.data.role === 'Admin') {
-        this.setState({ status: validationState.admin, getUsers: true });
+        this.setState({ status: validationState.admin, loading: true });
       } else {
         this.setState({ status: validationState.notAdmin });
       }
@@ -33,30 +33,75 @@ export default class Admin extends Component {
 
   componentDidUpdate() {
     console.log(this.state);
-    if (this.state.status === validationState.admin && this.state.getUsers) {
+    if (this.state.status === validationState.admin && this.state.loading) {
       Auth.get('http://localhost:3030/users').then((users) => {
         this.setState({ users: users.data });
       });
-      this.setState({ getUsers: false });
+      this.setState({ loading: false });
+    }
+  }
+  deleteUser(_id, name) {
+    let r = window.confirm(`Delete ${name}`);
+    if (r) {
+      Auth.delete(`http://localhost:3030/user/${_id}`).then((res) => {
+        Auth.get('http://localhost:3030/users').then((users) => {
+          this.setState({ users: users.data });
+        });
+      });
     }
   }
 
+  validateUser(_id) {
+    const body = {
+      _id,
+      role: 'Viewer',
+    };
+    Auth.post(`http://localhost:3030/user`, body).then((res) => {
+      Auth.get('http://localhost:3030/users').then((users) => {
+        this.setState({ users: users.data });
+      });
+    });
+  }
   render() {
     switch (this.state.status) {
       case validationState.validating:
         return (
           <div>
-            <button onClick={this.isAdmin.bind(this)}>Click</button>
+            <div>loading</div>
           </div>
         );
       case validationState.admin: {
         let userDisplay = this.state.users.map((user) => {
-          return <li>{`${user.firstName} ${user.lastName}: ${user.role}`}</li>;
+          return (
+            <tr key={user._id}>
+              <td>{`${user.firstName}${user.lastName}`}</td>
+              <td>{user.role}</td>
+              <td>
+                <button
+                  onClick={() => this.deleteUser(user._id, user.firstName)}
+                >
+                  delete
+                </button>
+                <button onClick={() => this.validateUser(user._id)}>
+                  Grant Access
+                </button>
+              </td>
+            </tr>
+          );
         });
         return (
           <Layout showHeader>
             <div>Welcome Greg</div>
-            <ul>{userDisplay}</ul>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th />
+                </tr>
+                {userDisplay}
+              </tbody>
+            </table>
           </Layout>
         );
       }

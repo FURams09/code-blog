@@ -52,34 +52,38 @@ class IndexPage extends Component {
             </h2>
           </div>
           <div style={styles.Grid.gridContainer}>
-            <Blurb />
-            <div
-              style={Object.assign({}, styles.Grid.gridContentArea, {
-                gridArea: `purpose`,
-              })}
-            >
-              <h2>About Me</h2>
-              <p>Welcome to your new Gatsby site.</p>
-              <p>Now go build something great.</p>
-
-              <div>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <p>tent</p>
-              </div>
-            </div>
+            <Blurb
+              gridArea="aboutMe"
+              query={graphql`
+                query {
+                  markdownRemark(
+                    frontmatter: { path: { eq: "/landing/about" } }
+                  ) {
+                    html
+                    frontmatter {
+                      path
+                      title
+                    }
+                  }
+                }
+              `}
+            />
+            <Blurb
+              gridArea="purpose"
+              query={graphql`
+                query {
+                  markdownRemark(
+                    frontmatter: { path: { eq: "/landing/mission" } }
+                  ) {
+                    html
+                    frontmatter {
+                      path
+                      title
+                    }
+                  }
+                }
+              `}
+            />
 
             <div
               style={Object.assign({}, styles.Grid.gridContentArea, {

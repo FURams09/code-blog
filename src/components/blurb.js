@@ -26,7 +26,7 @@ export default function Blurb(props) {
         return (
           <div
             style={Object.assign({}, styles.Grid.gridContentArea, {
-              gridArea: `aboutMe`,
+              gridArea: props.gridArea,
             })}
           >
             <div dangerouslySetInnerHTML={{ __html: html }} />
