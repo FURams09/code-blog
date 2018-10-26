@@ -1,8 +1,15 @@
+// server
 const express = require('express');
 const cors = require('cors');
 
+// data
 const mongoose = require('mongoose');
 const connect = require('./database/mongo');
+
+// logging
+const logger = require('../lib/logger');
+const morgan = require('morgan');
+
 // Removes deprecation warning for collection.ensureIndex
 // https://mongoosejs.com/docs/deprecations.html
 mongoose.set('useNewUrlParser', true);
@@ -25,9 +32,10 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 app.use(cors({ origin: 'http://localhost:8000', credentials: true })); // Gatsby dev port
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ type: 'application/json' }));
+app.use(morgan('tiny'));
+
 /*PUBLIC ROUTES */
 app.post('/register', async (req, res) => {
-  console.log(req.body);
   const { firstName, lastName, email } = req.body;
   if (!firstName || !lastName || !email) {
     res.status(400).send(`invalid request ${req}`);
@@ -36,10 +44,9 @@ app.post('/register', async (req, res) => {
     firstName,
     lastName,
     email,
-    role: 'PENDING',
+    role: 'Pending',
   });
   googleUser.save().catch((ex) => {
-    //console.log(ex);
     res.send(ex);
   });
   res.send(googleUser);
@@ -48,14 +55,14 @@ app.post('/register', async (req, res) => {
 /*PRIVATE ROUTES */
 const authenticate = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
-  console.log(req.headers);
+
   try {
     if (authorizationHeader) {
       const sentToken = req.headers.authorization.split(' ')[1]; // Bearer <token>
 
       const session = await Session.findOne({ token: sentToken }).catch(
         (ex) => {
-          console.log(`Session Not Found: ${ex}`);
+          logger.error(`Session Not Found: ${ex}`);
           res.status(401).send(ex);
         }
       );
@@ -67,6 +74,7 @@ const authenticate = async (req, res, next) => {
       );
     }
   } catch (ex) {
+    logger.error(ex);
     res.status(401).send(ex);
   }
 };
@@ -104,12 +112,9 @@ app.get('/logout', authenticate, async (req, res) => {
 
     res.send({ session: req.session.token });
   } catch (ex) {
+    logger.error(`Error ending session ${req.session.token}: ${ex}`);
     res.status(500).send(`Error ending session: ${ex}`);
   }
-});
-
-app.get('/authenticate', authenticate, (req, res) => {
-  res.send(req.session.user);
 });
 
 app.get('/users', authenticate, async (req, res) => {
@@ -143,5 +148,5 @@ app.get('/', authenticate, (req, res) => {
   res.send('gotten');
 });
 app.listen(3030, () => {
-  console.log(`http://localhost:3030 listening for Auth`);
+  logger.info(`http://localhost:3030 listening for Auth`);
 });

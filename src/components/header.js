@@ -3,7 +3,7 @@ import { Link, navigate } from 'gatsby';
 
 import { GoogleLogout } from 'react-google-login';
 
-import Auth from '../lib/auth';
+import Auth from '../../lib/auth';
 class Header extends Component {
   constructor(props) {
     super(props);

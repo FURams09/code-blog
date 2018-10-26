@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from '@reach/router';
 // lib
-import Auth from '../lib/auth';
+import Auth from '../../lib/auth';
 
 // components
 import Layout from '../components/layout';

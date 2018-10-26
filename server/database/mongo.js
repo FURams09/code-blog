@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const logger = require('../../lib/logger');
 module.exports = () => {
   const mongoURL = `mongodb://localhost:27017/CodeBlog`;
 
@@ -8,9 +8,9 @@ module.exports = () => {
   let db = mongoose.connection;
 
   db.on('error', () => {
-    console.log(`Mongoose connection error:`);
+    logger.error(`Mongoose connection error:`);
   });
   db.once('open', () => {
-    console.log(`connected to ${mongoURL}`);
+    logger.info(`connected to ${mongoURL}`);
   });
 };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { graphql } from 'gatsby';
 
 import styles from '../styles';
-import Auth from '../lib/auth';
+import Auth from '../../lib/auth';
 import Layout from './layout';
 export default class BlogTemplate extends Component {
   constructor(props) {

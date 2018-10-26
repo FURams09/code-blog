@@ -10,6 +10,8 @@
     "@material-ui/core": "^3.3.0",
     "@material-ui/icons": "^3.0.1",
     "axios": "^0.18.0",
+    "bunyan": "^1.8.12",
+    "bunyan-express-serializer": "^1.0.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.4",
@@ -23,6 +25,7 @@
     "json-server": "^0.14.0",
     "mongodb": "^3.1.8",
     "mongoose": "^5.3.4",
+    "morgan": "^1.9.1",
     "react": "^16.6",
     "react-dom": "^16.6",
     "react-google-login": "^3.2.1",
@@ -38,7 +41,8 @@
     "format": "prettier --write '**/*.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev-serve": "json-server --watch dev_server/db.json",
-    "auth-serve": "nodemon server/server.js"
+    "auth-serve": "nodemon server/server.js | bunyan -o short",
+    "bunyan": "npx bunyan"
   },
   "devDependencies": {
     "nodemon": "^1.18.4",
