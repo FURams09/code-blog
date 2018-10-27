@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { graphql } from 'gatsby';
 
 import styles from '../styles';
-import Auth from '../../lib/auth';
 import Layout from './layout';
 export default class BlogTemplate extends Component {
   constructor(props) {
@@ -12,16 +11,14 @@ export default class BlogTemplate extends Component {
   render() {
     const { data } = this.props;
     const { frontmatter, html } = data.markdownRemark;
+    console.log(frontmatter);
     return (
       <Layout showHeader>
-        <div style={styles.Grid.gridContainer}>
-          <div
-            style={Object.assign({}, styles.Grid.gridContentArea, {
-              gridArea: `aboutMe`,
-            })}
-          >
-            <div dangerouslySetInnerHTML={{ __html: html }} />
-          </div>
+        <div className="blogPost">
+          <h3>{frontmatter.title}</h3>
+          <a href={frontmatter.link}>{frontmatter.linkText}</a>
+
+          <div dangerouslySetInnerHTML={{ __html: html }} />
         </div>
       </Layout>
     );
@@ -34,6 +31,8 @@ export const pageQuery = graphql`
       frontmatter {
         path
         title
+        link
+        linkText
       }
     }
   }

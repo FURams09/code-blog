@@ -22,12 +22,7 @@ class Header extends Component {
 
   render() {
     return (
-      <div
-        style={{
-          background: 'rebeccapurple',
-          marginBottom: '1.45rem',
-        }}
-      >
+      <div style={{ background: 'rebeccapurple', marginBottom: '1.45rem' }}>
         <div
           style={{
             margin: '0 auto',
@@ -35,32 +30,31 @@ class Header extends Component {
             padding: '1.45rem 1.0875rem',
           }}
         >
-          <h1 style={{ margin: 0 }}>
-            <Link
-              to="/"
-              style={{
-                color: 'white',
-                textDecoration: 'none',
-              }}
-            >
+          <h1 style={{ margin: 0, display: `inline` }}>
+            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
               {this.props.siteTitle}
             </Link>
+          </h1>
+          <div style={{ display: `inline` }}>
+            <Link to="/admin">Admin</Link>
+          </div>
+
+          <div style={{ float: `right`, padding: '10px 20px' }}>
+            <button
+              onClick={() => {
+                localStorage.removeItem('Authorization');
+                navigate('/');
+              }}
+            >
+              Kill
+            </button>
 
             <GoogleLogout
-              style={{ padding: '10px 20px', margin: '10px' }}
+              style={{ margin: '10px' }}
               buttonText="Logout"
               onLogoutSuccess={this.logout.bind(this)}
             />
-          </h1>
-          <button
-            onClick={() => {
-              localStorage.removeItem('Authorization');
-              navigate('/');
-            }}
-          >
-            Kill
-          </button>
-          <Link to="/admin">Admin</Link>
+          </div>
         </div>
       </div>
     );

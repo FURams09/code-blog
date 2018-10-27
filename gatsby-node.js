@@ -2,7 +2,7 @@ const path = require('path');
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions;
 
-  const LandingCard = path.resolve(`./src/components/blog-template.js`);
+  const BlogTemplate = path.resolve(`./src/components/blog-template.js`);
 
   return new Promise((resolve, reject) => {
     resolve(
@@ -30,7 +30,9 @@ exports.createPages = ({ graphql, actions }) => {
             path: node.frontmatter.path,
             title: node.frontmatter.title,
             lastEdited: node.frontmatter.lastEdited,
-            component: LandingCard,
+            link: node.frontmatter.link,
+            linkText: node.frontmatter.linkText,
+            component: BlogTemplate,
             context: {
               path: node.frontmatter.path,
             },
