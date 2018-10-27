@@ -9,9 +9,10 @@ class Header extends Component {
   constructor(props) {
     super(props);
   }
-  logout() {
+  logout(e) {
+    e.preventDefault();
     Auth.get('http://localhost:3030/logout')
-      .then((res) => {
+      .then(() => {
         this.localLogout();
       })
       .catch((ex) => {
@@ -59,8 +60,8 @@ class Header extends Component {
                   console.log(ex);
                   return false;
                 });
+                alert(`Sessions Killed ${res.data.n}`);
               }}
-              style={{ dislpay: 'inline' }}
             >
               Kill Sessions
             </button>

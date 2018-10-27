@@ -82,7 +82,6 @@ const authenticate = async (req, res, next) => {
       );
 
       req.session = session;
-      console.log(req.session);
       next();
     } else {
       AuthLogger.warn(`Unauthorized Request`);
@@ -122,7 +121,7 @@ app.post('/login', async (req, res) => {
     res.status(400).send(`User Not Found`);
   }
   let sessionUser = {
-    name: googleUser.name,
+    name: googleUser.firstName,
     email: googleUser.email,
     role: googleUser.role,
   };
@@ -198,7 +197,6 @@ app.delete('/user/:_id', authenticate, async (req, res) => {
 });
 
 app.delete('/sessions/all', authenticate, async (req, res) => {
-  DebugLogger.debug(req.session);
   if (!req.session.token) {
     res.status(401).send(`Session could not be verified`);
   }

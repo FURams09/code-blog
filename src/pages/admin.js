@@ -60,7 +60,7 @@ export default class Admin extends Component {
       _id,
       role: 'Viewer',
     };
-    Auth.post(`http://localhost:3030/user`, body).then((res) => {
+    Auth.put(`http://localhost:3030/user`, body).then((res) => {
       Auth.get('http://localhost:3030/users').then((users) => {
         this.setState({ users: users.data });
       });
