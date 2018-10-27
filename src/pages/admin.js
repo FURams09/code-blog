@@ -19,12 +19,17 @@ export default class Admin extends Component {
       loading: false,
       users: [],
       awaitingUpdate: false,
+      adminUser: {},
     };
   }
   componentDidMount() {
     Auth.get('http://localhost:3030/authenticate').then((user) => {
       if (user.data.role === 'Admin') {
-        this.setState({ status: validationState.admin, loading: true });
+        this.setState({
+          status: validationState.admin,
+          loading: true,
+          currentUser: user.data.name || user.data.email,
+        });
       } else {
         this.setState({ status: validationState.notAdmin });
       }
@@ -32,7 +37,6 @@ export default class Admin extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
     if (this.state.status === validationState.admin && this.state.loading) {
       Auth.get('http://localhost:3030/users').then((users) => {
         this.setState({ users: users.data });
@@ -91,8 +95,8 @@ export default class Admin extends Component {
         });
         return (
           <Layout showHeader>
-            <div style={{ textAlign: `center` }}>
-              <div>Welcome {}</div>
+            <div>
+              <div>Welcome {this.state.currentUser}</div>
               <table style={{ maxWidth: `500px`, margin: `0 10px` }}>
                 <tbody>
                   <tr>

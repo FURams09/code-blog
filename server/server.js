@@ -7,11 +7,12 @@ const mongoose = require('mongoose');
 const connect = require('./database/mongo');
 
 // logging
-const logger = require('../lib/logger');
+const { logger, debugLogger } = require('../lib/logger');
 const morgan = require('morgan');
 
-const authLogger = logger(`Auth`);
-const userLogger = logger(`User API`);
+const AuthLogger = logger(`Auth`);
+const UserLogger = logger(`User API`);
+const DebugLogger = debugLogger();
 // Removes deprecation warning for collection.ensureIndex
 // https://mongoosejs.com/docs/deprecations.html
 mongoose.set('useNewUrlParser', true);
@@ -75,18 +76,20 @@ const authenticate = async (req, res, next) => {
 
       const session = await Session.findOne({ token: sentToken }).catch(
         (ex) => {
-          authLogger.error(`Session Not Found: ${ex}`);
+          AuthLogger.error(`Session Not Found: ${ex}`);
           res.status(401).send(ex);
         }
       );
+
       req.session = session;
+      console.log(req.session);
       next();
     } else {
-      authLogger.warn(`Unauthorized Request`);
+      AuthLogger.warn(`Unauthorized Request`);
       res.status(401).send([]);
     }
   } catch (ex) {
-    authLogger.error(ex);
+    AuthLogger.error(ex);
     res.status(500).send(ex);
   }
 };
@@ -110,7 +113,7 @@ app.post('/login', async (req, res) => {
   });
 
   const loginReq = ticket.getPayload();
-  authLogger.trace(`Login Ticket Validated: ${JSON.stringify(loginReq)}`);
+  AuthLogger.trace(`Login Ticket Validated: ${JSON.stringify(loginReq)}`);
   // Find out if user is in database
   // if user is pending, let them know
   //if user if not in db return them to their homepage
@@ -119,6 +122,7 @@ app.post('/login', async (req, res) => {
     res.status(400).send(`User Not Found`);
   }
   let sessionUser = {
+    name: googleUser.name,
     email: googleUser.email,
     role: googleUser.role,
   };
@@ -141,7 +145,7 @@ app.get('/logout', authenticate, async (req, res) => {
 
     res.send({ session: req.session.token });
   } catch (ex) {
-    authLogger.error(`Error ending session ${req.session.token}: ${ex}`);
+    AuthLogger.error(`Error ending session ${req.session.token}: ${ex}`);
     res.status(500).send(`Error ending session: ${ex}`);
   }
 });
@@ -166,7 +170,7 @@ app.put('/user/', authenticate, async (req, res) => {
     res.status(500).send(ex);
   });
   if (user.role !== 'Pending') {
-    userLogger.info(
+    UserLogger.info(
       `Non-Pending user whitelist attempt with ID ${req.body._id}. \nUser: ${
         user.firstName
       } ${user.lastName}\nRole: ${user.role}\nSender: ${req.session.email}`
@@ -174,7 +178,7 @@ app.put('/user/', authenticate, async (req, res) => {
   } else {
     user.role = req.body.role;
     user.save().catch((ex) => res.status(500).send(ex));
-    userLogger.info(
+    UserLogger.info(
       `User ${user.firstName} ${user.lastName} granted viewer permissions`
     );
   }
@@ -193,6 +197,19 @@ app.delete('/user/:_id', authenticate, async (req, res) => {
   res.send(users);
 });
 
+app.delete('/sessions/all', authenticate, async (req, res) => {
+  DebugLogger.debug(req.session);
+  if (!req.session.token) {
+    res.status(401).send(`Session could not be verified`);
+  }
+  let usersDeleted = await Session.deleteMany({
+    token: { $ne: req.session.token },
+  }).catch((ex) => {
+    res.status(500).send(ex);
+  });
+  res.send(usersDeleted);
+});
+
 app.listen(3030, () => {
-  authLogger.info(`http://localhost:3030 listening for Requests`);
+  AuthLogger.info(`http://localhost:3030 listening for Requests`);
 });

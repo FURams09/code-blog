@@ -1,6 +1,6 @@
 ---
 title: 'Sample Blog Template'
-path: '/blog/lorem'
+path: '/blog/sample'
 lastUpdated: '2018-10-27'
 links:
   [

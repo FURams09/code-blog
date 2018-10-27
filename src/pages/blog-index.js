@@ -4,9 +4,11 @@ import { Link } from 'gatsby';
 import Layout from '../components/layout';
 
 export default class BlogIndex extends Component {
+  // eslint-disable-next-line
   constructor(props) {
     super(props);
   }
+  //TODO: Rerender when blogs are added or deleted
   render() {
     const { data } = this.props;
     const blogs = data.allMarkdownRemark.edges.map((blog, i) => {

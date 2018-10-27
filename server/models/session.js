@@ -8,6 +8,7 @@ const sessionSchema = new mongoose.Schema({
   user: {
     email: String,
     role: String,
+    name: String,
   },
 });
 

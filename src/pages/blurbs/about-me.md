@@ -1,6 +1,6 @@
 ---
-title: 'About Me'
-path: '/landing/about'
+title: 'aboutMe'
+path: '/blurb/about-me'
 lastEdited: '2018-10-22'
 type: 'blurb'
 ---

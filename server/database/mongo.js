@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const logger = require('../../lib/logger');
+const { logger } = require('../../lib/logger');
 
 dbLogger = logger(`MongoDB`);
 module.exports = () => {

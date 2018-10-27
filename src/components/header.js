@@ -5,19 +5,27 @@ import { GoogleLogout } from 'react-google-login';
 
 import Auth from '../../lib/auth';
 class Header extends Component {
+  // eslint-disable-next-line no-useless-constructor
   constructor(props) {
     super(props);
   }
   logout() {
     Auth.get('http://localhost:3030/logout')
       .then((res) => {
-        console.log(res);
-        localStorage.removeItem('Authorization');
-        navigate('/');
+        this.localLogout();
       })
       .catch((ex) => {
         console.log(ex);
       });
+  }
+  /**
+   * if we were to find ourselves in a state where a user was logged out of Google
+   * but didn't properly kill the session locally, we would not be able to logout without
+   * TODO: Look into error handling logouts
+   */
+  localLogout() {
+    localStorage.removeItem('Authorization');
+    navigate('/');
   }
 
   render() {
@@ -32,25 +40,40 @@ class Header extends Component {
               {this.props.siteTitle}
             </Link>
           </h1>
-          <div style={{ display: `inline` }}>
-            <Link to="/admin">Admin</Link>
-          </div>
 
           <div style={{ float: `right`, padding: '10px 20px' }}>
-            <button
-              onClick={() => {
-                localStorage.removeItem('Authorization');
-                navigate('/');
+            <div
+              style={{
+                display: `inline`,
+                marginRight: `10px`,
+                backgroundColor: `gray`,
               }}
             >
-              Kill
+              <Link to="/admin">Admin</Link>
+            </div>
+            <button
+              onClick={async () => {
+                let res = await Auth.delete(
+                  'http://localhost:3030/sessions/all'
+                ).catch((ex) => {
+                  console.log(ex);
+                  return false;
+                });
+              }}
+              style={{ dislpay: 'inline' }}
+            >
+              Kill Sessions
             </button>
-
-            <GoogleLogout
-              style={{ margin: '10px' }}
-              buttonText="Logout"
-              onLogoutSuccess={this.logout.bind(this)}
-            />
+            <div
+              onClick={this.localLogout.bind(this)}
+              style={{ dislpay: 'inline' }}
+            >
+              <GoogleLogout
+                style={{ margin: '10px' }}
+                buttonText="Logout"
+                onLogoutSuccess={this.logout.bind(this)}
+              />
+            </div>
           </div>
         </div>
       </div>

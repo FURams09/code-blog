@@ -1,5 +1,5 @@
 ---
-title: 'Mission Statement'
+title: 'purpose'
 path: '/landing/mission'
 lastEdited: '2018-10-22'
 type: 'blurb'

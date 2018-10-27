@@ -5,7 +5,6 @@ import { Redirect } from '@reach/router';
 import Layout from '../components/layout.js';
 import LoginForm from '../components/login';
 import styles from '../styles';
-import Blurb from '../components/blurb.js';
 
 const STATUSES = {
   loading: 'loading',
@@ -39,6 +38,22 @@ class IndexPage extends Component {
     console.log(ex);
   }
   render() {
+    const { allMarkdownRemark } = this.props.data;
+    let displayBlurbs = <></>;
+    if (allMarkdownRemark) {
+      displayBlurbs = allMarkdownRemark.edges.map((blurb) => {
+        return (
+          <div
+            style={Object.assign({}, styles.Grid.gridContentArea, {
+              gridArea: blurb.node.frontmatter.title,
+            })}
+          >
+            <div dangerouslySetInnerHTML={{ __html: blurb.node.html }} />
+          </div>
+        );
+      });
+    }
+
     if (this.state.status === STATUSES.loggedIn) {
       return <Redirect to="/blog-index/" noThrow />;
     } else if (this.state.status === STATUSES.loading) {
@@ -52,38 +67,7 @@ class IndexPage extends Component {
             </h2>
           </div>
           <div style={styles.Grid.gridContainer}>
-            <Blurb
-              gridArea="aboutMe"
-              query={graphql`
-                query {
-                  markdownRemark(
-                    frontmatter: { path: { eq: "/landing/about" } }
-                  ) {
-                    html
-                    frontmatter {
-                      path
-                      title
-                    }
-                  }
-                }
-              `}
-            />
-            <Blurb
-              gridArea="purpose"
-              query={graphql`
-                query {
-                  markdownRemark(
-                    frontmatter: { path: { eq: "/landing/mission" } }
-                  ) {
-                    html
-                    frontmatter {
-                      path
-                      title
-                    }
-                  }
-                }
-              `}
-            />
+            {displayBlurbs}
 
             <div
               style={Object.assign({}, styles.Grid.gridContentArea, {
@@ -112,3 +96,18 @@ class IndexPage extends Component {
 }
 
 export default IndexPage;
+
+export const pageQuery = graphql`
+  query Blurbs {
+    allMarkdownRemark(filter: { frontmatter: { type: { eq: "blurb" } } }) {
+      edges {
+        node {
+          frontmatter {
+            title
+          }
+          html
+        }
+      }
+    }
+  }
+`;

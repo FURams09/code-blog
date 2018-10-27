@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { graphql } from 'gatsby';
 
-import Layout from './layout';
+import Layout from '../components/layout';
+// eslint-disable-next-line
 export default class BlogTemplate extends Component {
+  // eslint-disable-next-line
   constructor(props) {
     super(props);
   }

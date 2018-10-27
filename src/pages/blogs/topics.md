@@ -17,9 +17,15 @@ type: 'blog'
   - GraphQL
 
 - Design Decisions
+
   - Styling (to add)
   - Authentication
   - Markdown
+
+- Lessons Learned
+  - GraphQL using pageQueries (filtering)
+    - find out how/when they load
+  - responsive design/media queries
 
 ## Behavioral Interviews
 
