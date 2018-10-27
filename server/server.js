@@ -10,6 +10,7 @@ const connect = require('./database/mongo');
 const logger = require('../lib/logger');
 const morgan = require('morgan');
 
+const authLogger = logger(`Auth`);
 // Removes deprecation warning for collection.ensureIndex
 // https://mongoosejs.com/docs/deprecations.html
 mongoose.set('useNewUrlParser', true);
@@ -65,18 +66,18 @@ const authenticate = async (req, res, next) => {
 
       const session = await Session.findOne({ token: sentToken }).catch(
         (ex) => {
-          logger.error(`Session Not Found: ${ex}`);
+          authLogger.error(`Session Not Found: ${ex}`);
           res.status(401).send(ex);
         }
       );
       req.session = session;
       next();
     } else {
-      logger.warn(`Unauthorized Request`);
+      authLogger.warn(`Unauthorized Request`);
       res.status(401).send([]);
     }
   } catch (ex) {
-    logger.error(ex);
+    authLogger.error(ex);
     res.status(500).send(ex);
   }
 };
@@ -86,7 +87,6 @@ const authenticate = async (req, res, next) => {
  * The access_token is then used as the bearer token for future requests.
  */
 app.post('/login', async (req, res) => {
-  logger.trace(JSON.stringify(req.body.authorizationTicket));
   const { id_token, access_token } = req.body.authorizationTicket;
   const ticket = await client.verifyIdToken({
     idToken: req.body.authorizationTicket.id_token,
@@ -94,6 +94,7 @@ app.post('/login', async (req, res) => {
   });
 
   const loginReq = ticket.getPayload();
+  authLogger.trace(`Login Ticket Validated: ${JSON.stringify(loginReq)}`);
   // Find out if user is in database
   // if user is pending, let them know
   //if user if not in db return them to their homepage
@@ -124,7 +125,7 @@ app.get('/logout', authenticate, async (req, res) => {
 
     res.send({ session: req.session.token });
   } catch (ex) {
-    logger.error(`Error ending session ${req.session.token}: ${ex}`);
+    authLogger.error(`Error ending session ${req.session.token}: ${ex}`);
     res.status(500).send(`Error ending session: ${ex}`);
   }
 });
@@ -148,7 +149,7 @@ app.put('/user/', authenticate, async (req, res) => {
     res.status(500).send(ex);
   });
   if (user.role !== 'Pending') {
-    logger.info(
+    authLogger.info(
       `Non-Pending user whitelist attempt with ID ${req.body._id}. \nUser: ${
         user.firstName
       } ${user.lastName}\nRole: ${user.role}\nSender: ${req.session.email}`
@@ -156,7 +157,7 @@ app.put('/user/', authenticate, async (req, res) => {
   } else {
     user.role = req.body.role;
     user.save().catch((ex) => res.status(500).send(ex));
-    logger.info(
+    authLogger.info(
       `User ${user.firstName} ${user.lastName} granted viewer permissions`
     );
   }
@@ -176,5 +177,5 @@ app.get('/', authenticate, (req, res) => {
   res.send('gotten');
 });
 app.listen(3030, () => {
-  logger.info(`http://localhost:3030 listening for Auth`);
+  authLogger.info(`http://localhost:3030 listening for Auth`);
 });

@@ -91,17 +91,19 @@ export default class Admin extends Component {
         });
         return (
           <Layout showHeader>
-            <div>Welcome Greg</div>
-            <table>
-              <tbody>
-                <tr>
-                  <th>Name</th>
-                  <th>Status</th>
-                  <th />
-                </tr>
-                {userDisplay}
-              </tbody>
-            </table>
+            <div style={{ textAlign: `center` }}>
+              <div>Welcome {}</div>
+              <table style={{ maxWidth: `500px`, margin: `0 10px` }}>
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th />
+                  </tr>
+                  {userDisplay}
+                </tbody>
+              </table>
+            </div>
           </Layout>
         );
       }
