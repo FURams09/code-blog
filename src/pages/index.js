@@ -40,7 +40,7 @@ class IndexPage extends Component {
   }
   render() {
     if (this.state.status === STATUSES.loggedIn) {
-      return <Redirect to="/blog/first-blog/" noThrow />;
+      return <Redirect to="/blog-index/" noThrow />;
     } else if (this.state.status === STATUSES.loading) {
       return <Layout>Validating Login Status</Layout>;
     } else {
@@ -105,7 +105,6 @@ class IndexPage extends Component {
               </div>
             </div>
           </div>
-          <div style={styles.Footer.background}>(c) Greg Padin 2018</div>
         </Layout>
       );
     }

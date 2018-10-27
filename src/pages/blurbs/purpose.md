@@ -2,6 +2,7 @@
 title: 'Mission Statement'
 path: '/landing/mission'
 lastEdited: '2018-10-22'
+type: 'blurb'
 ---
 
 ## Where Are you

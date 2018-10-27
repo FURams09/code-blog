@@ -624,9 +624,33 @@ pre tt:after {
 }
 
 /* CUSTOM CSS */
-.blogPost {
-  margin: 10px;
+
+.content-layout {
+  margin: 0 auto;
+  min-width: 450px;
+  max-width: 1080px;
+  padding: 1.45rem 1.0875rem;
+  height: 100%;
 }
-.blogPost h3 {
+.blog-post h1 {
   color: darkblue;
+}
+
+.blog-topic-list li {
+  display: inline;
+  margin-right: 15px;
+}
+
+.footer-background {
+  bottom: 0px;
+  background-color: black;
+
+  height: 60px;
+
+  width: 100%;
+  padding: 10px 25px;
+}
+.footer-content {
+  color: grey;
+  margin: 0;
 }

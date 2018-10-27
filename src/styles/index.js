@@ -32,18 +32,6 @@ export default {
       border: `1px dashed red`,
     },
   },
-  Footer: {
-    background: {
-      bottom: `0px`,
-      backgroundColor: 'black',
-      color: `grey`,
-      height: `60px`,
-      textAlign: `left`,
-      verticalAlign: `bottom`,
-      width: `100%`,
-      padding: `10px 25px`,
-    },
-  },
   Form: {
     formGroup: {
       display: `block`,

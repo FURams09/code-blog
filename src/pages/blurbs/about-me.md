@@ -2,6 +2,7 @@
 title: 'About Me'
 path: '/landing/about'
 lastEdited: '2018-10-22'
+type: 'blurb'
 ---
 
 ## About Me

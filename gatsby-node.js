@@ -14,6 +14,10 @@ exports.createPages = ({ graphql, actions }) => {
                 frontmatter {
                   title
                   path
+                  links
+                  tags
+                  summary
+                  type
                   lastEdited
                 }
               }
@@ -30,8 +34,10 @@ exports.createPages = ({ graphql, actions }) => {
             path: node.frontmatter.path,
             title: node.frontmatter.title,
             lastEdited: node.frontmatter.lastEdited,
-            link: node.frontmatter.link,
-            linkText: node.frontmatter.linkText,
+            links: node.frontmatter.links,
+            tags: node.frontmatter.tags,
+            summary: node.frontmatter.summary,
+            type: node.frontmatter.type,
             component: BlogTemplate,
             context: {
               path: node.frontmatter.path,

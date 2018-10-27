@@ -23,15 +23,12 @@ class Header extends Component {
   render() {
     return (
       <div style={{ background: 'rebeccapurple', marginBottom: '1.45rem' }}>
-        <div
-          style={{
-            margin: '0 auto',
-            maxWidth: 960,
-            padding: '1.45rem 1.0875rem',
-          }}
-        >
+        <div className="content-layout">
           <h1 style={{ margin: 0, display: `inline` }}>
-            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
+            <Link
+              to="/blog-index/"
+              style={{ color: 'white', textDecoration: 'none' }}
+            >
               {this.props.siteTitle}
             </Link>
           </h1>

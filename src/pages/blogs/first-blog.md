@@ -2,6 +2,7 @@
 title: 'My First Blog'
 path: '/blog/first-blog'
 lastUpdated: '2018-10-23'
+type: 'blog'
 ---
 
 ### Nutter Futters

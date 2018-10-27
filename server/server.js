@@ -11,6 +11,7 @@ const logger = require('../lib/logger');
 const morgan = require('morgan');
 
 const authLogger = logger(`Auth`);
+const userLogger = logger(`User API`);
 // Removes deprecation warning for collection.ensureIndex
 // https://mongoosejs.com/docs/deprecations.html
 mongoose.set('useNewUrlParser', true);
@@ -57,6 +58,14 @@ app.post('/register', async (req, res) => {
 /**
  * Ensures that any request to a restricted route has a Bearer token with the session ID
  */
+
+/**
+ * Express middleware to make sure that header has Bearer token and then attaches
+ * the session to the request.
+ *
+ */
+
+// TODO: Add role based validation, currently just makes sure the user has as session
 const authenticate = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
 
@@ -83,7 +92,14 @@ const authenticate = async (req, res, next) => {
 };
 
 /**
- * validates the id_token with Google, then creates a session for the provided access_token.
+ * used to test authenticator middleware
+ */
+app.get('/', authenticate, (req, res) => {
+  res.send('gotten');
+});
+
+/**
+ * validates the id_token with Google Auth Server, then creates a session for the provided access_token.
  * The access_token is then used as the bearer token for future requests.
  */
 app.post('/login', async (req, res) => {
@@ -137,6 +153,7 @@ app.get('/users', authenticate, async (req, res) => {
   let users = await User.find({}).catch((ex) => {
     res.status(500).send(ex);
   });
+
   res.send(users);
 });
 
@@ -149,7 +166,7 @@ app.put('/user/', authenticate, async (req, res) => {
     res.status(500).send(ex);
   });
   if (user.role !== 'Pending') {
-    authLogger.info(
+    userLogger.info(
       `Non-Pending user whitelist attempt with ID ${req.body._id}. \nUser: ${
         user.firstName
       } ${user.lastName}\nRole: ${user.role}\nSender: ${req.session.email}`
@@ -157,7 +174,7 @@ app.put('/user/', authenticate, async (req, res) => {
   } else {
     user.role = req.body.role;
     user.save().catch((ex) => res.status(500).send(ex));
-    authLogger.info(
+    userLogger.info(
       `User ${user.firstName} ${user.lastName} granted viewer permissions`
     );
   }
@@ -165,6 +182,9 @@ app.put('/user/', authenticate, async (req, res) => {
   res.send(user);
 });
 
+/**
+ * Remove a user
+ */
 app.delete('/user/:_id', authenticate, async (req, res) => {
   const userId = req.params._id;
   let users = await User.findByIdAndRemove(userId).catch((ex) => {
@@ -173,9 +193,6 @@ app.delete('/user/:_id', authenticate, async (req, res) => {
   res.send(users);
 });
 
-app.get('/', authenticate, (req, res) => {
-  res.send('gotten');
-});
 app.listen(3030, () => {
-  authLogger.info(`http://localhost:3030 listening for Auth`);
+  authLogger.info(`http://localhost:3030 listening for Requests`);
 });

@@ -5,6 +5,7 @@ import { StaticQuery, graphql } from 'gatsby';
 
 import './layout.css';
 import Header from './header';
+import Footer from './footer';
 
 const Layout = ({ children, showHeader }) => {
   let body = (title) => {
@@ -43,6 +44,7 @@ const Layout = ({ children, showHeader }) => {
             <html lang="en" />
           </Helmet>
           {body(data.site.siteMetadata.title)}
+          <Footer />
         </>
       )}
     />
