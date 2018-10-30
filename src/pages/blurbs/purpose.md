@@ -1,18 +1,12 @@
 ---
-title: 'purpose'
+title: 'Where Are You'
 path: '/landing/mission'
 lastEdited: '2018-10-22'
 type: 'blurb'
+gridArea: 'purpose'
 ---
 
-## Where Are you
-
 ### Here's what you need to know
-
-- Built this blog using:
-
-  - Gatsby
-  - Express
 
 - Looking to work on my:
   - CSS and Styling

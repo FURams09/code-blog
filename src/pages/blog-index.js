@@ -40,7 +40,6 @@ export const pageQuery = graphql`
             title
             summary
             tags
-            path
           }
         }
       }

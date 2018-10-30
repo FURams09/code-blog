@@ -4,13 +4,43 @@ import { Redirect } from '@reach/router';
 
 import Layout from '../components/layout.js';
 import LoginForm from '../components/login';
-import styles from '../styles';
+import styled from 'styled-components';
+
+import BlurbCard from '../components/blurb-card';
 
 const STATUSES = {
   loading: 'loading',
   loggedIn: 'loggedIn',
   landingPage: 'landingPage',
 };
+
+const HeaderBackground = styled.div`
+  position: fixed;
+  width: 1080px;
+  height: 160px;
+  border: 1px dashed black;
+  background-color: green;
+`;
+
+const HeaderText = styled.h2`
+  position: absolute;
+  top: 40%;
+  left: 18%;
+  color: blue;
+  z-index: 1;
+`;
+
+const ContentContainer = styled.div`
+  padding-top: 160px;
+  width: 1080px;
+  display: grid;
+  grid-template-areas:
+    '. purpose techStack .'
+    '. aboutMe login .';
+  grid-row-gap: 20px;
+  grid-column-gap: 20px;
+  border: 1px dashed red;
+`;
 
 class IndexPage extends Component {
   constructor(props) {
@@ -43,13 +73,13 @@ class IndexPage extends Component {
     if (allMarkdownRemark) {
       displayBlurbs = allMarkdownRemark.edges.map((blurb) => {
         return (
-          <div
-            style={Object.assign({}, styles.Grid.gridContentArea, {
-              gridArea: blurb.node.frontmatter.title,
-            })}
+          <BlurbCard
+            gridArea={blurb.node.frontmatter.gridArea}
+            title={blurb.node.frontmatter.title}
+            borderColor="blue"
           >
             <div dangerouslySetInnerHTML={{ __html: blurb.node.html }} />
-          </div>
+          </BlurbCard>
         );
       });
     }
@@ -61,20 +91,16 @@ class IndexPage extends Component {
     } else {
       return (
         <Layout showHeader={false}>
-          <div style={styles.Header.headerContainer}>
-            <h2 style={styles.Header.jumbotronText}>
+          <HeaderBackground>
+            <HeaderText>
               Gregory Padin's Coding and Interviewing Blog
-            </h2>
-          </div>
-          <div style={styles.Grid.gridContainer}>
+            </HeaderText>
+          </HeaderBackground>
+
+          <ContentContainer>
             {displayBlurbs}
 
-            <div
-              style={Object.assign({}, styles.Grid.gridContentArea, {
-                gridArea: `login`,
-              })}
-            >
-              <h2>Request Access or Login</h2>
+            <BlurbCard gridArea="login" title="Request Access or Login">
               <div
                 style={{
                   display: `flex`,
@@ -87,8 +113,8 @@ class IndexPage extends Component {
                   onLoginFail={this.loginFail.bind(this)}
                 />
               </div>
-            </div>
-          </div>
+            </BlurbCard>
+          </ContentContainer>
         </Layout>
       );
     }
@@ -104,6 +130,7 @@ export const pageQuery = graphql`
         node {
           frontmatter {
             title
+            gridArea
           }
           html
         }

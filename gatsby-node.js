@@ -19,6 +19,7 @@ exports.createPages = ({ graphql, actions }) => {
                   summary
                   type
                   lastEdited
+                  gridArea
                 }
               }
             }
@@ -38,6 +39,7 @@ exports.createPages = ({ graphql, actions }) => {
             tags: node.frontmatter.tags,
             summary: node.frontmatter.summary,
             type: node.frontmatter.type,
+            gridArea: node.frontmatter.gridArea,
             component: BlogTemplate,
             context: {
               path: node.frontmatter.path,

@@ -2,11 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
-
+import styled from 'styled-components';
 import './layout.css';
 import Header from './header';
 import Footer from './footer';
 
+const ViewPort = styled.div`
+  margin: 0 auto;
+  min-width: 450px;
+  max-width: 1080px;
+  padding: 1.45rem 1.0875rem;
+  height: 100%;
+`;
 const Layout = ({ children, showHeader }) => {
   let body = (title) => {
     if (showHeader) {
@@ -43,8 +50,10 @@ const Layout = ({ children, showHeader }) => {
           >
             <html lang="en" />
           </Helmet>
-          {body(data.site.siteMetadata.title)}
-          <Footer />
+          <ViewPort>
+            {body(data.site.siteMetadata.title)}
+            <Footer />
+          </ViewPort>
         </>
       )}
     />

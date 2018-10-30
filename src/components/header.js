@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import { Link, navigate } from 'gatsby';
+import styled from 'styled-components';
 
 import { GoogleLogout } from 'react-google-login';
 
 import Auth from '../../lib/auth';
+
+const Container = styled.div`
+  background-color: rebeccapurple;
+  margin-bottom: 1.45rem;
+  width: 100%;
+`;
 class Header extends Component {
   // eslint-disable-next-line no-useless-constructor
   constructor(props) {
@@ -31,8 +38,8 @@ class Header extends Component {
 
   render() {
     return (
-      <div style={{ background: 'rebeccapurple', marginBottom: '1.45rem' }}>
-        <div className="content-layout">
+      <Container>
+        <div>
           <h1 style={{ margin: 0, display: `inline` }}>
             <Link
               to="/blog-index/"
@@ -52,22 +59,10 @@ class Header extends Component {
             >
               <Link to="/admin">Admin</Link>
             </div>
-            <button
-              onClick={async () => {
-                let res = await Auth.delete(
-                  'http://localhost:3030/sessions/all'
-                ).catch((ex) => {
-                  console.log(ex);
-                  return false;
-                });
-                alert(`Sessions Killed ${res.data.n}`);
-              }}
-            >
-              Kill Sessions
-            </button>
+
             <div
               onClick={this.localLogout.bind(this)}
-              style={{ dislpay: 'inline' }}
+              style={{ dislpay: 'inline-block' }}
             >
               <GoogleLogout
                 style={{ margin: '10px' }}
@@ -77,7 +72,7 @@ class Header extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     );
   }
 }

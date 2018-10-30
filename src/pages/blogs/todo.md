@@ -29,7 +29,7 @@ type: 'blog'
 
 #### State
 
-- Add statefulness to
+- Add statefulness to blog.
 
 #### CSS/Styling
 

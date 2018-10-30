@@ -10,26 +10,9 @@ export default {
     jumbotronText: {
       position: `absolute`,
       top: `40%`,
-      left: `30%`,
+      left: `33%`,
       color: `blue`,
       zIndex: `1`,
-    },
-  },
-  Grid: {
-    //TODO: convert this to flexbox. More in line with what it is
-    gridContainer: {
-      display: 'grid',
-      gridTemplateAreas: `
-      ". aboutMe purpose login ."`,
-      gridTemplateColumns: `1fr minmax(200px, 400p) minmax(200px, 400p) minmax(200px, 400p) 1fr`,
-      gridTemplateRows: `minmax(300px, 600p)`,
-      textAlign: `center`,
-      paddingTop: `200px`,
-      border: `1px dashed red`,
-    },
-    gridContentArea: {
-      textAlign: `center`,
-      border: `1px dashed red`,
     },
   },
   Form: {
