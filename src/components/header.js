@@ -6,10 +6,19 @@ import { GoogleLogout } from 'react-google-login';
 
 import Auth from '../../lib/auth';
 
+import Spinner from './spinner';
 const Container = styled.div`
   background-color: rebeccapurple;
-  margin-bottom: 1.45rem;
   width: 100%;
+  display: grid;
+  height: 60px;
+  grid-template-columns: 35px 1fr 200px;
+`;
+
+const GregSpinner = styled.div`
+  margin: 15px 0 0 5px;
+  height: 30px;
+  width: 30px;
 `;
 class Header extends Component {
   // eslint-disable-next-line no-useless-constructor
@@ -39,37 +48,38 @@ class Header extends Component {
   render() {
     return (
       <Container>
-        <div>
-          <h1 style={{ margin: 0, display: `inline` }}>
-            <Link
-              to="/blog-index/"
-              style={{ color: 'white', textDecoration: 'none' }}
-            >
-              {this.props.siteTitle}
-            </Link>
-          </h1>
+        <GregSpinner>
+          <Spinner />
+        </GregSpinner>
+        <h1 style={{ paddingLeft: `15px` }}>
+          <Link
+            to="/blog-index/"
+            style={{ color: 'white', textDecoration: 'none' }}
+          >
+            {this.props.siteTitle}
+          </Link>
+        </h1>
 
-          <div style={{ float: `right`, padding: '10px 20px' }}>
-            <div
-              style={{
-                display: `inline`,
-                marginRight: `10px`,
-                backgroundColor: `gray`,
-              }}
-            >
-              <Link to="/admin">Admin</Link>
-            </div>
+        <div style={{ float: `right`, padding: '10px 20px' }}>
+          <div
+            style={{
+              display: `inline`,
+              marginRight: `10px`,
+              backgroundColor: `gray`,
+            }}
+          >
+            <Link to="/admin">Admin</Link>
+          </div>
 
-            <div
-              onClick={this.localLogout.bind(this)}
-              style={{ dislpay: 'inline-block' }}
-            >
-              <GoogleLogout
-                style={{ margin: '10px' }}
-                buttonText="Logout"
-                onLogoutSuccess={this.logout.bind(this)}
-              />
-            </div>
+          <div
+            onClick={this.localLogout.bind(this)}
+            style={{ dislpay: 'inline-block' }}
+          >
+            <GoogleLogout
+              style={{ margin: '10px' }}
+              buttonText="Logout"
+              onLogoutSuccess={this.logout.bind(this)}
+            />
           </div>
         </div>
       </Container>
