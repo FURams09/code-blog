@@ -31,7 +31,7 @@ const HeaderText = styled.h2`
 `;
 
 const ContentContainer = styled.div`
-  padding-top: 160px;
+  padding-top: 180px;
   width: 1080px;
   display: grid;
   grid-template-areas:

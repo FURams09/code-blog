@@ -13,7 +13,7 @@ type: 'blog'
 - Come up with deployment pipeline.
 - Plan Hosting for API
 - Add other Auth methods.
-- Change LocalStorage to
+- Change LocalStorage to Cookies for Token
 
 ## Server
 
@@ -27,9 +27,12 @@ type: 'blog'
 
 ## Front End
 
+- Choose Template Library
+- Look into
+
 #### State
 
-- Add statefulness to blog.
+- Add statefulness to blog. (hooks or mobx)
 
 #### CSS/Styling
 

@@ -11,7 +11,6 @@ const ViewPort = styled.div`
   margin: 0 auto;
   min-width: 450px;
   max-width: 1080px;
-  padding: 1.45rem 1.0875rem;
   height: 100%;
 `;
 const Layout = ({ children, showHeader }) => {

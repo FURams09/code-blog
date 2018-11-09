@@ -5,23 +5,25 @@ import styled from 'styled-components';
 const BlurbCard = (props) => {
   const BlurbContainer = styled.div`
     text-align: center;
-    margin-top: 10px;
-    width: 90%;
+    grid-area: ${props.gridArea};
+    border: 1px dashed ${props.borderColor || `red`};
   `;
   const BlurbHeader = styled.h2`
     text-align: center;
     font-size: 28px;
+    margin-top: 10px;
   `;
+
+  const BlurbContent = styled.div`
+    text-align: left;
+    padding: 0px 10px;
+  `;
+
   return (
-    <div
-      style={{
-        gridArea: props.gridArea,
-        border: `1px dashed ${props.borderColor || `red`}`,
-      }}
-    >
+    <BlurbContainer gridArea={props.gridArea} borderColor={props.borderColor}>
       <BlurbHeader>{props.title}</BlurbHeader>
-      <BlurbContainer>{props.children}</BlurbContainer>
-    </div>
+      <BlurbContent>{props.children}</BlurbContent>
+    </BlurbContainer>
   );
 };
 
